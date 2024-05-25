@@ -1,6 +1,6 @@
 namespace: wackopicko
 output:
-  file_path: /results.csv
+  file_path: ./results.csv
   format: CSV
 working_dir: ..
 language: ES
