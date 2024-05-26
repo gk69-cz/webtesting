@@ -1,0 +1,17 @@
+name: Standalone CLI
+on: [push, pull_request]
+jobs:
+  machineStandalone:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run FluidAttacks CLI
+        uses: docker://docker.io/fluidattacks/cli:latest
+        with:
+          args: skims scan config/config.yaml
+      - name: Upload scan results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+           name: scan-results
+           path: results.csv

@@ -1,0 +1,19 @@
+namespace: wackopicko
+output:
+  file_path: ./results.csv
+  format: CSV
+working_dir: ..
+language: ES
+sast:
+  include:
+    - .
+  exclude:
+    - glob(**/node_modules/**)
+    - glob(**/test/**)
+sca:
+  include:
+    - .
+  exclude:
+    - glob(**/test/**)
+
+strict: true
