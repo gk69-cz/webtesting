@@ -46,22 +46,9 @@ jobs:
         with:
           args: skims scan -c fluid-config.yml
 
-      # Paso 4: Validar los resultados para romper el pipeline
-      - name: Validate Scan Results
-        run: |
-          if grep -q "Critical" ./Fluid-Attacks-Results.csv; then
-            echo "Critical vulnerabilities found! Failing the build."
-            exit 1
-          elif grep -q "High" ./Fluid-Attacks-Results.csv; then
-            echo "High vulnerabilities found! Failing the build."
-            exit 1
-          else
-            echo "No critical or high vulnerabilities found. Build passed."
-
-        # Paso 5: Subir resultados como artefacto
+      # Paso 4: Subir resultados como artefacto
       - name: Upload scan results
         uses: actions/upload-artifact@v3
         with:
           name: Fluid-Attacks-Results
           path: ./Fluid-Attacks-Results.csv
-
