@@ -1,0 +1,23 @@
+name: Standalone CLI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  machineStandalone:
+    runs-on: ubuntu-latest
+    steps:
+      # Paso 1: Check out del código fuente
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Paso 2: Ejecutar el escaneo con el contenedor
+      - name: Run Fluid Attacks Scan
+        uses: docker://docker.io/fluidattacks/cli:latest
+        with:
+          args: skims scan .
