@@ -1,62 +1,12 @@
-name: Fluid Attacks Pipeline
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
+# .github/workflows/dev.yml
+name: Standalone CLI
+on: [push, pull_request]
 jobs:
-  machineStandalone:
-    runs-on: ubuntu-latest
-    steps:
-      # Paso 1: Check out del código fuente
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Paso 2: Crear el archivo de configuración YAML
-      - name: Create configuration file
-        run: |
-          echo "namespace: myapp
-          output:
-            file_path: ./Fluid-Attacks-Results.csv
-            format: CSV
-          working_dir: .
-          language: EN
-          apk:
-            include:
-              - glob(**/*.apk)
-          sast:
-            include:
-              - .
-            exclude:
-              - glob(**/node_modules/**)
-              - glob(**/test/**)
-          sca:
-            include:
-              - .
-            exclude:
-              - glob(**/test/**)
-
-      # Paso 3: Ejecutar el escaneo usando el archivo de configuración
-      - name: Run Fluid Attacks Scan
-        uses: docker://docker.io/fluidattacks/cli:latest
-        with:
-          args: skims scan .
-
-      # Paso 4: Asegurar la existencia del archivo CSV
-      - name: Ensure CSV file exists
-        run: |
-          if [ ! -f ./Fluid-Attacks-Results.csv ]; then
-            echo "No vulnerabilities found, creating an empty CSV."
-            echo "Severity,Description,File,Line" > ./Fluid-Attacks-Results.csv
-          fi
-
-      # Paso 5: Subir el archivo CSV como artefacto
-      - name: Upload scan results as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: Fluid-Attacks-Results
-          path: ./Fluid-Attacks-Results.csv
+   machineStandalone:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@f095bcc56b7c2baf48f3ac70d6d6782f4f553222
+         - uses: docker://docker.io/fluidattacks/cli:latest
+           name: machineStandalone
+           with:
+             args: skims scan .

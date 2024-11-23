@@ -1,0 +1,36 @@
+namespace: my_app
+working_dir: .
+commit: e59607b9de3ef4c13d292705fg3da1ff0c67eb38
+language: EN
+output:
+  file_path: ./results.csv
+  format: CSV
+checks:
+  - F052
+strict: false
+file_size_limit: false
+sast:
+  include:
+    - ./relative/path/to/file/or/dir
+    - src/main/java/org/test/Test.java
+    - glob(*)
+    - glob(**.java)
+    - glob(src/**/test*.py)
+sca:
+  include:
+    - .
+apk:
+  include:
+    - ./relative/path/to/build/awesome-app-v1.0.apk
+    - build/awesome-app-v1.0.apk
+cspm:
+  aws_credentials:
+    - access_key_id: "000f"
+      secret_access_key: "000f"
+dast:
+  urls:
+    - https://localhost.com
+    - https://localhost.com:443
+  ssl_checks: true
+  http_checks: true
+debug: true
