@@ -9,9 +9,4 @@ jobs:
          - uses: docker://docker.io/fluidattacks/cli:latest
            name: machineStandalone
            with:
-             args: skims scan configuration.yml
-         - name: Upload Results
-           uses: actions/upload-artifact@v3
-           with:
-             name: scan-results
-             path: ./results.csv
+             args: skims --strict scan . 
