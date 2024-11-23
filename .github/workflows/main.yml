@@ -9,4 +9,5 @@ jobs:
          - uses: docker://docker.io/fluidattacks/cli:latest
            name: machineStandalone
            with:
-             args: skims --strict scan . 
+             args: skims scan . --config config.yaml
+
