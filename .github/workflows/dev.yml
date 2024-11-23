@@ -21,3 +21,11 @@ jobs:
         uses: docker://docker.io/fluidattacks/cli:latest
         with:
           args: skims scan .
+      # Paso 3: Validar código de salida
+      - name: Check Scan Result
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "Scan failed. Breaking the build."
+            exit 1
+          fi
+
