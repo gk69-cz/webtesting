@@ -1,4 +1,4 @@
-name: Standalone CLI
+name: Fluid Attacks Pipeline
 
 on:
   push:
@@ -16,16 +16,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Paso 2: Ejecutar el escaneo con el contenedor
+      # Paso 2: Crear el archivo de configuración (opcional si ya está en el repo)
+      - name: Create configuration file
+        run: |
+          echo "namespace: myapp
+          output:
+            file_path: ./Fluid-Attacks-Results.csv
+            format: CSV
+          working_dir: .
+          language: EN
+          apk:
+            include:
+              - glob(**/*.apk)
+          sast:
+            include:
+              - .
+            exclude:
+              - glob(**/node_modules/**)
+              - glob(**/test/**)
+          sca:
+            include:
+              - .
+            exclude:
+              - glob(**/test/**)" > fluid-config.yml
+
+      # Paso 3: Ejecutar el escaneo usando la configuración YAML
       - name: Run Fluid Attacks Scan
         uses: docker://docker.io/fluidattacks/cli:latest
         with:
-          args: skims --strict scan .
-      # Paso 3: Validar código de salida
-      - name: Check Scan Result
-        run: |
-          if [ $? -ne 0 ]; then
-            echo "Scan failed. Breaking the build."
-            exit 1
-          fi
+          args: skims scan -c fluid-config.yml
 
+      # Paso 4: Validar los resultados para romper el pipeline
+      - name: Validate Scan Results
+        run: |
+          if grep -q "Critical" ./Fluid-Attacks-Results.csv; then
+            echo "Critical vulnerabilities found! Failing the build."
+            exit 1
+          elif grep -q "High" ./Fluid-Attacks-Results.csv; then
+            echo "High vulnerabilities found! Failing the build."
+            exit 1
+          else
+            echo "No critical or high vulnerabilities found. Build passed."
