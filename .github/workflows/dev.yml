@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Paso 2: Crear el archivo de configuración (opcional si ya está en el repo)
+      # Paso 2: Crear el archivo de configuración YAML
       - name: Create configuration file
         run: |
           echo "namespace: myapp
@@ -40,14 +40,22 @@ jobs:
             exclude:
               - glob(**/test/**)" > fluid-config.yml
 
-      # Paso 3: Ejecutar el escaneo usando la configuración YAML
+      # Paso 3: Ejecutar el escaneo usando el archivo de configuración
       - name: Run Fluid Attacks Scan
         uses: docker://docker.io/fluidattacks/cli:latest
         with:
           args: skims scan -c fluid-config.yml
 
-      # Paso 4: Subir resultados como artefacto
-      - name: Upload scan results
+      # Paso 4: Asegurar la existencia del archivo CSV
+      - name: Ensure CSV file exists
+        run: |
+          if [ ! -f ./Fluid-Attacks-Results.csv ]; then
+            echo "No vulnerabilities found, creating an empty CSV."
+            echo "Severity,Description,File,Line" > ./Fluid-Attacks-Results.csv
+          fi
+
+      # Paso 5: Subir el archivo CSV como artefacto
+      - name: Upload scan results as artifact
         uses: actions/upload-artifact@v3
         with:
           name: Fluid-Attacks-Results
