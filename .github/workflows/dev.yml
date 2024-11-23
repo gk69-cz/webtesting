@@ -20,7 +20,7 @@ jobs:
       - name: Run Fluid Attacks Scan
         uses: docker://docker.io/fluidattacks/cli:latest
         with:
-          args: skims scan .
+          args: skims --strict scan .
       # Paso 3: Validar código de salida
       - name: Check Scan Result
         run: |
