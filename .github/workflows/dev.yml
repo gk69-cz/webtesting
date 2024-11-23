@@ -57,3 +57,11 @@ jobs:
             exit 1
           else
             echo "No critical or high vulnerabilities found. Build passed."
+
+        # Paso 5: Subir resultados como artefacto
+      - name: Upload scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: Fluid-Attacks-Results
+          path: ./Fluid-Attacks-Results.csv
+
