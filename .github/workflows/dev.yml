@@ -38,13 +38,13 @@ jobs:
             include:
               - .
             exclude:
-              - glob(**/test/**)" > fluid-config.yml
+              - glob(**/test/**)
 
       # Paso 3: Ejecutar el escaneo usando el archivo de configuración
       - name: Run Fluid Attacks Scan
         uses: docker://docker.io/fluidattacks/cli:latest
         with:
-          args: skims scan -c fluid-config.yml
+          args: skims scan .
 
       # Paso 4: Asegurar la existencia del archivo CSV
       - name: Ensure CSV file exists
